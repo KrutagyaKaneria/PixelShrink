@@ -24,13 +24,13 @@ function Footer() {
 
         {/* Name & Email */}
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm text-gray-500">
-          <span className="text-gray-300 font-medium">Your Full Name</span>
+          <span className="text-gray-300 font-medium">Krutagya Kaneria</span>
           <span className="hidden sm:block text-gray-700">·</span>
           <a
-            href="mailto:your@email.com"
+            href="mailto:krutagya.kaneria.cg@gmail.com"
             className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
           >
-            your@email.com
+            krutagya.kaneria.cg@gmail.com
           </a>
         </div>
 
