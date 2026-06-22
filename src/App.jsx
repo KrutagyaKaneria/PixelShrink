@@ -2,18 +2,16 @@ import { useState, useCallback } from 'react'
 import Header from './components/Header'
 import Dropzone from './components/Dropzone'
 import ImageCard from './components/ImageCard'
+import EmptyState from './components/EmptyState'
 import DownloadAllButton from './components/DownloadAllButton'
 import Footer from './components/Footer'
 import { useImageFiles } from './hooks/useImageFiles'
 
 function App() {
-  const { files, addFiles, removeFile } = useImageFiles()
+  // Dark mode — default to dark (the app's designed palette)
+  const [isDark, setIsDark] = useState(true)
 
-  /**
-   * Map of fileId → { blob, filename } for all cards that have finished
-   * compression. Cleared when the file is removed.
-   * Shape: { [id]: { blob: Blob, filename: string } | null }
-   */
+  const { files, addFiles, removeFile } = useImageFiles()
   const [compressedOutputs, setCompressedOutputs] = useState({})
 
   const handleCompressed = useCallback((id, output) => {
@@ -34,41 +32,41 @@ function App() {
     setCompressedOutputs({})
   }, [files, removeFile])
 
-  // Only pass ready (non-null) outputs to DownloadAllButton
   const readyOutputs = Object.values(compressedOutputs).filter(Boolean)
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col items-center">
+    // `dark` class applied here drives all dark: Tailwind variants below
+    <div className={`${isDark ? 'dark' : ''} min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col items-center transition-colors duration-300`}>
 
       <main className="flex flex-col items-center w-full flex-1 max-w-3xl px-4 sm:px-6 pb-12">
-        <Header />
 
-        <div className="w-full max-w-2xl border-t border-gray-800/60 mb-10" />
+        <Header isDark={isDark} onToggleDark={() => setIsDark((d) => !d)} />
+
+        <div className="w-full max-w-2xl border-t border-gray-200 dark:border-gray-800/60 mb-8 sm:mb-10" />
 
         <Dropzone onAddFiles={addFiles} />
 
-        {files.length > 0 && (
-          <section className="w-full max-w-2xl mt-8 px-4">
+        {/* Empty state */}
+        {files.length === 0 && <EmptyState />}
 
-            {/* List header row */}
-            <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-              <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+        {/* File list */}
+        {files.length > 0 && (
+          <section className="w-full max-w-2xl mt-8 px-2 sm:px-4">
+
+            {/* List header */}
+            <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+              <h2 className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                 {files.length} {files.length === 1 ? 'Image' : 'Images'}
               </h2>
 
-              <div className="flex items-center gap-3">
-                {/* Download All — only shown for 2+ images */}
+              <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
                 {files.length > 1 && (
-                  <DownloadAllButton
-                    outputs={readyOutputs}
-                    total={files.length}
-                  />
+                  <DownloadAllButton outputs={readyOutputs} total={files.length} />
                 )}
-
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="text-xs text-gray-600 hover:text-red-400 transition-colors duration-200"
+                  className="text-xs text-gray-500 dark:text-gray-600 hover:text-red-400 transition-colors duration-200 whitespace-nowrap"
                 >
                   Clear all
                 </button>

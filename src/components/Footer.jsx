@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="w-full border-t border-gray-800 mt-auto py-8 px-4">
+    <footer className="w-full border-t border-gray-200 dark:border-gray-800 mt-auto py-8 px-4 transition-colors duration-300">
       <div className="max-w-2xl mx-auto flex flex-col items-center gap-5 text-center">
 
         {/* CTA Button */}
@@ -23,18 +23,18 @@ function Footer() {
         </a>
 
         {/* Name & Email */}
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm text-gray-500">
-          <span className="text-gray-300 font-medium">Krutagya Kaneria</span>
-          <span className="hidden sm:block text-gray-700">·</span>
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm">
+          <span className="text-gray-700 dark:text-gray-300 font-medium">Krutagya Kaneria</span>
+          <span className="hidden sm:block text-gray-300 dark:text-gray-700">·</span>
           <a
             href="mailto:krutagya.kaneria.cg@gmail.com"
-            className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
+            className="text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200"
           >
             krutagya.kaneria.cg@gmail.com
           </a>
         </div>
 
-        <p className="text-gray-700 text-xs">
+        <p className="text-gray-400 dark:text-gray-700 text-xs">
           © {new Date().getFullYear()} PixelShrink — All processing happens in your browser.
         </p>
       </div>
