@@ -1,42 +1,98 @@
+/**
+ * Footer — matches Stitch design exactly:
+ *   Left: PixelShrink wordmark + "Built for Digital Heroes © 2024" + Privacy/Terms/GitHub links
+ *   Right: "Built for Digital Heroes" CTA button → https://digitalheroesco.com
+ *   Mobile: stacks vertically, button becomes full-width
+ */
 function Footer() {
   return (
-    <footer className="w-full border-t border-gray-200 dark:border-gray-800 mt-auto py-8 px-4 transition-colors duration-300">
-      <div className="max-w-2xl mx-auto flex flex-col items-center gap-5 text-center">
+    <footer className="
+      w-full mt-auto
+      border-t border-outline-var dark:border-dark-ct
+      bg-surface dark:bg-dark-bg
+      transition-colors duration-300
+    ">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
 
-        {/* CTA Button */}
-        <a
-          href="https://digitalheroesco.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            inline-block px-6 py-3 rounded-xl
-            bg-gradient-to-r from-blue-600 to-cyan-500
-            hover:from-blue-500 hover:to-cyan-400
-            text-white font-semibold text-sm tracking-wide
-            shadow-lg shadow-blue-500/20
-            hover:shadow-blue-500/40
-            transition-all duration-300 hover:scale-105
-            active:scale-100
-          "
-        >
-          Built for Digital Heroes
-        </a>
+          {/* Left column */}
+          <div className="flex flex-col gap-2">
+            {/* Wordmark */}
+            <span className="font-geist font-semibold text-sm text-on-surface dark:text-dark-on tracking-tight">
+              PixelShrink
+            </span>
 
-        {/* Name & Email */}
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm">
-          <span className="text-gray-700 dark:text-gray-300 font-medium">Krutagya Kaneria</span>
-          <span className="hidden sm:block text-gray-300 dark:text-gray-700">·</span>
+            {/* Tagline + copyright */}
+            <p className="text-xs text-on-surface-var dark:text-dark-on-muted">
+              Built for Digital Heroes © {new Date().getFullYear()}
+            </p>
+
+            {/* Nav links */}
+            <div className="flex items-center gap-4 mt-0.5">
+              {[
+                { label: 'Privacy', href: '#' },
+                { label: 'Terms',   href: '#' },
+                { label: 'GitHub',  href: 'https://github.com' },
+              ].map(({ label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  className="
+                    text-xs text-on-surface-var dark:text-dark-on-muted
+                    hover:text-primary-ct dark:hover:text-primary-dim
+                    transition-colors duration-150
+                  "
+                >
+                  {label}
+                </a>
+              ))}
+            </div>
+
+            {/* Author credit */}
+            <div className="flex flex-col gap-1 mt-1 pt-3 border-t border-outline-var/60 dark:border-dark-ct">
+              <span className="text-xs font-geist font-semibold text-on-surface dark:text-dark-on">
+                Krutagya Kaneria
+              </span>
+              <a
+                href="mailto:krutagya.kaneria.cg@gmail.com"
+                className="
+                  text-xs text-primary-ct dark:text-primary-dim
+                  hover:underline transition-colors duration-150
+                "
+              >
+                krutagya.kaneria.cg@gmail.com
+              </a>
+            </div>
+          </div>
+
+          {/* Right — CTA Button */}
           <a
-            href="mailto:krutagya.kaneria.cg@gmail.com"
-            className="text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200"
+            id="built-for-digital-heroes-btn"
+            href="https://digitalheroesco.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              inline-flex items-center justify-center gap-2
+              w-full sm:w-auto
+              px-5 py-2.5 rounded-xl
+              bg-primary-ct hover:bg-primary
+              text-white font-geist font-semibold text-sm
+              shadow-sm hover:shadow-ambient-lg
+              hover:scale-[1.02] active:scale-100
+              transition-all duration-200
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-ct focus-visible:ring-offset-2
+            "
           >
-            krutagya.kaneria.cg@gmail.com
+            {/* Small lightning icon */}
+            <svg className="w-3.5 h-3.5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2}
+                d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+            </svg>
+            Built for Digital Heroes
           </a>
         </div>
-
-        <p className="text-gray-400 dark:text-gray-700 text-xs">
-          © {new Date().getFullYear()} PixelShrink — All processing happens in your browser.
-        </p>
       </div>
     </footer>
   )

@@ -15,6 +15,15 @@ function buildFilename(originalName, format) {
   return `${base}-compressed.${format}`
 }
 
+/**
+ * ImageCard — matches Stitch "Uploaded State" and "Mobile View" screens:
+ *   - Thumbnail + filename + size row
+ *   - Original → compressed size with green percentage badge
+ *   - Quality slider (custom styled)
+ *   - Format segmented control
+ *   - Processing badge overlay when compressing
+ *   - Hover-reveal remove button (top-right)
+ */
 function ImageCard({ entry, onRemove, onCompressed }) {
   const { id, file, previewUrl, size } = entry
 
@@ -51,103 +60,133 @@ function ImageCard({ entry, onRemove, onCompressed }) {
     return () => { if (prevObjectUrl.current) URL.revokeObjectURL(prevObjectUrl.current) }
   }, [])
 
-  const isCompressing  = status === 'compressing'
-  const savingsPct     = compressed ? savings(size, compressed.size) : null
-  const isSmaller      = savingsPct !== null
+  const isCompressing = status === 'compressing'
+  const savingsPct    = compressed ? savings(size, compressed.size) : null
+  const isSmaller     = savingsPct !== null
   const outputFilename = buildFilename(file.name, format)
 
   return (
     <div className="
-      bg-white dark:bg-gray-900
-      border border-gray-200 dark:border-gray-800
-      rounded-2xl overflow-hidden
-      hover:border-gray-300 dark:hover:border-gray-700
-      transition-colors duration-200 group
+      relative
+      bg-surface-lowest dark:bg-dark-surface
+      border border-outline-var dark:border-dark-ct
+      rounded-xl overflow-hidden
+      hover:border-on-surface-var/30 dark:hover:border-dark-ct-high
+      shadow-ambient hover:shadow-ambient-lg
+      transition-all duration-200 group
     ">
 
-      {/* ── Top row ── */}
-      <div className="flex items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 pb-3">
+      {/* Processing badge — top-right overlay */}
+      {isCompressing && (
+        <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 px-2 py-1 rounded-full
+          bg-primary-ct text-white text-xs font-geist font-semibold shadow-sm">
+          <LoadingSpinner size="xs" className="text-white/80" />
+          Processing…
+        </div>
+      )}
 
-        {/* Thumbnails — stacked on very small, side-by-side on sm+ */}
-        <div className="flex gap-1.5 flex-shrink-0">
-          {/* Original */}
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 ring-1 ring-gray-200 dark:ring-gray-700">
+      {/* ── Top row — thumbnail + info + remove ── */}
+      <div className="flex items-start gap-3 p-4 pb-3">
+
+        {/* Thumbnail */}
+        <div className="relative flex-shrink-0">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden bg-surface-ct dark:bg-dark-ct ring-1 ring-outline-var dark:ring-dark-ct-high">
             <img src={previewUrl} alt={file.name} className="w-full h-full object-cover" loading="lazy" />
           </div>
-          {/* Compressed preview — only show when ready */}
+          {/* Compressed preview — stacked below on mobile, right-side on sm+ */}
           {compressed && (
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 ring-1 ring-blue-500/40">
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-md overflow-hidden ring-2 ring-surface-lowest dark:ring-dark-surface sm:hidden">
               <img src={compressed.objectUrl} alt="Compressed" className="w-full h-full object-cover" loading="lazy" />
-            </div>
-          )}
-          {/* Spinner placeholder while compressing */}
-          {isCompressing && (
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-gray-100 dark:bg-gray-800 ring-1 ring-blue-500/20 flex items-center justify-center">
-              <LoadingSpinner size="sm" className="text-blue-400" />
             </div>
           )}
         </div>
 
+        {/* Compressed preview — sm+ */}
+        {compressed && (
+          <div className="hidden sm:block w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 ring-1 ring-primary-ct/40 dark:ring-primary-ct/30">
+            <img src={compressed.objectUrl} alt="Compressed" className="w-full h-full object-cover" loading="lazy" />
+          </div>
+        )}
+        {/* Spinner placeholder while compressing — sm+ */}
+        {isCompressing && (
+          <div className="hidden sm:flex w-16 h-16 rounded-lg flex-shrink-0 ring-1 ring-primary-ct/20 bg-surface-ct dark:bg-dark-ct items-center justify-center">
+            <LoadingSpinner size="sm" className="text-primary-ct dark:text-primary-dim" />
+          </div>
+        )}
+
         {/* File info */}
         <div className="flex-1 min-w-0">
-          <p
-            className="text-gray-900 dark:text-white text-sm font-medium truncate"
-            title={file.name}
-          >
+          <p className="font-geist font-semibold text-sm text-on-surface dark:text-dark-on truncate" title={file.name}>
             {file.name}
           </p>
 
           {/* Size row */}
-          <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 mt-1">
-            <span className="text-gray-400 dark:text-gray-500 text-xs">{formatBytes(size)}</span>
+          <div className="flex items-center flex-wrap gap-x-1.5 gap-y-0.5 mt-1">
+            <span className="text-xs text-on-surface-var dark:text-dark-on-muted">{formatBytes(size)}</span>
 
             {isCompressing && (
-              <span className="text-blue-400 text-xs animate-pulse">Compressing…</span>
+              <span className="text-xs text-primary-ct dark:text-primary-dim animate-pulse">Compressing…</span>
             )}
+
             {status === 'done' && compressed && (
               <>
-                <span className="text-gray-400 dark:text-gray-600 text-xs">→</span>
-                <span className={`text-xs font-semibold ${isSmaller ? 'text-emerald-500' : 'text-yellow-500'}`}>
+                <span className="text-xs text-on-surface-var/50 dark:text-dark-on-muted/50">→</span>
+                <span className={`text-xs font-semibold ${isSmaller ? 'text-success' : 'text-amber-600 dark:text-amber-400'}`}>
                   {formatBytes(compressed.size)}
                 </span>
-                {isSmaller
-                  ? <span className="text-xs text-emerald-500/80">−{savingsPct}%</span>
-                  : <span className="text-xs text-yellow-500/70">(no reduction)</span>
-                }
+                {isSmaller && (
+                  <span className="
+                    inline-flex items-center px-1.5 py-0.5 rounded-full text-[11px] font-geist font-semibold
+                    bg-success-light dark:bg-success/20
+                    text-success dark:text-emerald-400
+                  ">
+                    −{savingsPct}%
+                  </span>
+                )}
+                {!isSmaller && (
+                  <span className="text-xs text-amber-500/70 dark:text-amber-400/70">(no reduction)</span>
+                )}
               </>
             )}
+
             {status === 'error' && (
-              <span className="text-red-400 text-xs">⚠ {errorMsg}</span>
+              <span className="text-xs text-red-500 dark:text-red-400">⚠ {errorMsg}</span>
             )}
           </div>
         </div>
 
-        {/* Remove */}
+        {/* Remove button */}
         <button
           type="button"
           onClick={() => onRemove(id)}
           aria-label={`Remove ${file.name}`}
           className="
             flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center
-            text-gray-400 dark:text-gray-600 hover:text-white
-            bg-transparent hover:bg-red-500/80
-            transition-all duration-200
+            text-on-surface-var/40 dark:text-dark-on-muted/40
+            hover:text-red-500 dark:hover:text-red-400
+            hover:bg-red-50 dark:hover:bg-red-950/30
             opacity-0 group-hover:opacity-100 focus:opacity-100
-            focus:outline-none focus:ring-2 focus:ring-red-400
+            transition-all duration-150 ml-1
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400
           "
         >
-          ✕
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
       </div>
 
-      {/* ── Controls ── */}
-      <div className="px-3 sm:px-4 pb-3 sm:pb-4 flex flex-col gap-2.5 sm:gap-3">
+      {/* ── Divider ── */}
+      <div className="mx-4 border-t border-outline-var/50 dark:border-dark-ct" />
 
-        {/* Quality slider */}
-        <div className="flex items-center gap-2 sm:gap-3">
+      {/* ── Controls ── */}
+      <div className="px-4 py-3 flex flex-col gap-3">
+
+        {/* Quality slider row */}
+        <div className="flex items-center gap-3">
           <label
             htmlFor={`quality-${id}`}
-            className="text-gray-500 dark:text-gray-500 text-xs w-12 sm:w-14 flex-shrink-0"
+            className="font-geist text-xs font-medium text-on-surface-var dark:text-dark-on-muted w-12 flex-shrink-0"
           >
             Quality
           </label>
@@ -157,17 +196,17 @@ function ImageCard({ entry, onRemove, onCompressed }) {
             min={0.05} max={1} step={0.05}
             value={quality}
             onChange={(e) => setQuality(Number(e.target.value))}
-            className="flex-1 h-1.5 accent-blue-500 cursor-pointer min-w-0"
+            className="quality-slider flex-1 min-w-0"
           />
-          <span className="text-gray-700 dark:text-gray-300 text-xs w-9 text-right tabular-nums flex-shrink-0">
+          <span className="font-geist text-xs font-semibold text-on-surface dark:text-dark-on w-8 text-right tabular-nums flex-shrink-0">
             {Math.round(quality * 100)}%
           </span>
         </div>
 
-        {/* Format + Download — wrap gracefully on narrow screens */}
+        {/* Format + Download row */}
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="flex items-center gap-2">
-            <span className="text-gray-500 dark:text-gray-500 text-xs w-12 sm:w-14 flex-shrink-0">
+            <span className="font-geist text-xs font-medium text-on-surface-var dark:text-dark-on-muted w-12 flex-shrink-0">
               Format
             </span>
             <FormatSelector value={format} onChange={setFormat} />

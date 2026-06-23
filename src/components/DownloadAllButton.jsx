@@ -2,17 +2,19 @@ import { useState } from 'react'
 import { downloadAsZip } from '../lib/zipUtils'
 
 /**
- * Triggers a ZIP download of all currently compressed images.
+ * DownloadAllButton — matches Stitch bottom summary bar:
+ *   "Download All" prominent indigo button with ready count badge.
+ *   In mobile: full-width.
  *
  * Props:
- *   outputs — array of { filename: string, blob: Blob } (ready outputs only)
- *   total   — total number of uploaded files (to show pending count)
+ *   outputs — array of { filename, blob } (ready only)
+ *   total   — total number of uploaded files
  */
-function DownloadAllButton({ outputs, total }) {
+function DownloadAllButton({ outputs, total, fullWidth = false }) {
   const [zipping, setZipping] = useState(false)
-  const readyCount = outputs.length
+  const readyCount   = outputs.length
   const pendingCount = total - readyCount
-  const disabled = readyCount === 0 || zipping
+  const disabled     = readyCount === 0 || zipping
 
   const handleClick = async () => {
     if (disabled) return
@@ -27,6 +29,7 @@ function DownloadAllButton({ outputs, total }) {
   return (
     <button
       type="button"
+      id="download-all-btn"
       onClick={handleClick}
       disabled={disabled}
       title={
@@ -35,14 +38,14 @@ function DownloadAllButton({ outputs, total }) {
           : `Download ${readyCount} image${readyCount !== 1 ? 's' : ''} as ZIP`
       }
       className={`
-        flex items-center gap-2
-        px-4 py-2 rounded-xl text-sm font-semibold
+        inline-flex items-center justify-center gap-2
+        px-5 py-2.5 rounded-xl text-sm font-geist font-semibold
         transition-all duration-200
-        focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400
-        ${
-          disabled
-            ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-            : 'bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white shadow-md shadow-blue-500/20 hover:shadow-blue-500/30 hover:scale-[1.02] active:scale-100'
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-ct focus-visible:ring-offset-2
+        ${fullWidth ? 'w-full' : ''}
+        ${disabled
+          ? 'bg-surface-ct dark:bg-dark-ct text-on-surface-var/40 dark:text-dark-on-muted/40 cursor-not-allowed'
+          : 'bg-primary-ct hover:bg-primary text-white shadow-sm hover:shadow-ambient-lg hover:scale-[1.02] active:scale-100'
         }
       `}
     >
@@ -61,14 +64,12 @@ function DownloadAllButton({ outputs, total }) {
 
       {/* Label */}
       <span>
-        {zipping
-          ? 'Zipping…'
-          : `Download All as ZIP (${readyCount})`}
+        {zipping ? 'Zipping…' : `Download All${readyCount > 0 ? ` (${readyCount})` : ''}`}
       </span>
 
       {/* Pending badge */}
       {pendingCount > 0 && !zipping && (
-        <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-medium">
+        <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-white/20 text-white/90 text-[11px] font-medium">
           {pendingCount} pending
         </span>
       )}

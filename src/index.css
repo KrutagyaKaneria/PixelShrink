@@ -1,3 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Base resets ─────────────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Geist', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ── Custom range slider ─────────────────────────────────────────────────── */
+@layer components {
+  .quality-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 9999px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  /* Track — light */
+  .quality-slider::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 9999px;
+    background: #c7c4d8; /* outline-var */
+  }
+  .quality-slider::-moz-range-track {
+    height: 4px;
+    border-radius: 9999px;
+    background: #c7c4d8;
+  }
+
+  /* Track — dark */
+  .dark .quality-slider::-webkit-slider-runnable-track { background: #3f3f46; }
+  .dark .quality-slider::-moz-range-track              { background: #3f3f46; }
+
+  /* Thumb */
+  .quality-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #4f46e5;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+    margin-top: -6px;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease;
+  }
+  .quality-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #4f46e5;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+    cursor: pointer;
+    transition: box-shadow 0.15s ease;
+  }
+  .quality-slider:focus::-webkit-slider-thumb,
+  .quality-slider:hover::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px rgba(79,70,229,0.15), 0 1px 4px rgba(0,0,0,0.18);
+  }
+  .quality-slider:focus::-moz-range-thumb,
+  .quality-slider:hover::-moz-range-thumb {
+    box-shadow: 0 0 0 4px rgba(79,70,229,0.15), 0 1px 4px rgba(0,0,0,0.18);
+  }
+}
