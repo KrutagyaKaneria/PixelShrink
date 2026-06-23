@@ -22,10 +22,19 @@ function Footer() {
               PixelShrink
             </span>
 
-            {/* Tagline + copyright */}
-            <p className="text-xs text-on-surface-var dark:text-dark-on-muted">
-              Built for Digital Heroes © {new Date().getFullYear()}
-            </p>
+            {/* Tagline + copyright + Developer info */}
+            <div className="flex flex-wrap items-center gap-x-2 text-xs text-on-surface-var dark:text-dark-on-muted">
+              <span>Built for Digital Heroes © {new Date().getFullYear()}</span>
+              <span className="hidden sm:inline text-on-surface-var/40 dark:text-dark-on-muted/40">•</span>
+              <span>Developer: <span className="font-semibold text-on-surface dark:text-dark-on">Krutagya Kaneria</span></span>
+              <span className="hidden sm:inline text-on-surface-var/40 dark:text-dark-on-muted/40">•</span>
+              <a
+                href="mailto:krutagya.kaneria.cg@gmail.com"
+                className="text-primary-ct dark:text-primary-dim hover:underline"
+              >
+                krutagya.kaneria.cg@gmail.com
+              </a>
+            </div>
 
             {/* Nav links */}
             <div className="flex items-center gap-4 mt-0.5">
@@ -48,22 +57,6 @@ function Footer() {
                   {label}
                 </a>
               ))}
-            </div>
-
-            {/* Author credit */}
-            <div className="flex flex-col gap-1 mt-1 pt-3 border-t border-outline-var/60 dark:border-dark-ct">
-              <span className="text-xs font-geist font-semibold text-on-surface dark:text-dark-on">
-                Krutagya Kaneria
-              </span>
-              <a
-                href="mailto:krutagya.kaneria.cg@gmail.com"
-                className="
-                  text-xs text-primary-ct dark:text-primary-dim
-                  hover:underline transition-colors duration-150
-                "
-              >
-                krutagya.kaneria.cg@gmail.com
-              </a>
             </div>
           </div>
 

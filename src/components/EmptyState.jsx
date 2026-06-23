@@ -14,7 +14,7 @@ function EmptyState() {
     <div className="w-full max-w-2xl mx-auto mt-8 px-4">
 
       {/* Trust badges row */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-start justify-center gap-3 sm:gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch justify-center gap-3 sm:gap-4">
         {[
           {
             icon: (
